@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* {box-sizing: border-box}
+body {font-family: "Lato", sans-serif;}
+
+/* Style the tab */
+.tab {
+  float: left;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+  width: 30%;
+  height: 300px;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  display: block;
+  background-color: inherit;
+  color: black;
+  padding: 22px 16px;
+  width: 100%;
+  border: none;
+  outline: none;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current "tab button" class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  float: left;
+  padding: 0px 12px;
+  border: 1px solid #ccc;
+  width: 70%;
+  border-left: none;
+  height: 300px;
+}
+</style>
+</head>
+<body>
+
+<h2>Mini Banking</h2>
+<p>Click on the buttons inside the tabbed menu:</p>
+
+<div class="tab">
+  <button class="tablinks" onclick="openCity(event, 'Net Banking')" id="defaultOpen">Net Banking</button>
+  <button class="tablinks" onclick="openCity(event, 'Bill Payment')">Bill Payment</button>
+  <button class="tablinks" onclick="openCity(event, 'Online Shopping')">Online Shopping</button>
+  <button class="tablinks" onclick="openCity(event, 'Mobile Banking')">Mobile Banking</button>
+</div>
+
+<div id="Net Banking" class="tabcontent">
+  <h3>Net Banking</h3>
+  
+   <p>
+	Internet Banking Request.<BR><BR><BR>
+
+		<table border="1" width="30%">
+			<tr><td align="left">Id</td><td><input type="text" id="id"></td></tr>
+			<tr><td>Name</td><td><input type="text" id="name"></td></tr>
+			<tr><td>Cell</td><td><input type="text" id="cell"></td></tr>
+			<tr>
+				<td><button type="submit" onclick="add()">Add User</button></td>
+				<td><button type="button" onclick="update()">Update</button></td>
+				<td><button type="button" onclick="getr()">Get</button></td>
+				<td><button type="button" onclick="deleter()">Delete</button></td>
+			</tr>
+		</table>
+    
+	</p>
+</div>
+
+<div id="Bill Payment" class="tabcontent">
+  <h3>Bill Payment</h3>
+  <p>The easiest and the smartest way to pay your utility bills such as Electricity, Gas, Insurance, Telecom etc. With Quick Pay, you can now pay your bills instantly without registration.
+  
+  </p> 
+</div>
+
+<div id="Online Shopping" class="tabcontent">
+  <h3>Online Shopping</h3>
+  <p> Online transactions made easy for you. Its convenient, secure and rewarding</p>
+</div>
+
+<div id="Mobile Banking" class="tabcontent">
+  <h3>Mobile Banking</h3>
+  <p>Mobile Banking has the following advantages:
+
+    <li>Convenient way to access your account</li>
+    <li>Safe and Secure Banking</li>
+    <li>Convenient way to pay bills (Telephone, electricity & other utilities)</li>
+    <li>Get exciting offers and discounts</li>
+    <li>Banking services without internet (SMS Banking & NUUP)</li>
+</p>
+</div>
+
+<script>
+function openCity(evt, cityName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+
+
+function add() {
+    
+	var id=document.getElementById("id").value;
+	var name=document.getElementById("name").value;
+	var cell=document.getElementById("cell").value;
+	
+	
+	URL = "http://localhost:9000/api/new-netbanking" ;  //Your URL
+	
+	var json='{"id": "' + id + '", "name": "'+ name + '", "genre": "' + cell + '"}';
+    //alert(json);
+	var xhttp = new XMLHttpRequest();
+    //xhttp.onreadystatechange = function() {
+    //     if (this.readyState == 4 && this.status == 200) {
+    //         alert(this.responseText);
+    //     }
+    //};
+	
+	//xhttp.open("POST", 
+	xhttp.open("POST", URL, true);
+	xhttp.setRequestHeader("Content-type", "application/json");
+	xhttp.send(json);
+	alert ('Adding User...');
+	var resp = JSON.stringify(xhttp.responseText);
+	if(resp.indexOf("done")!= -1){
+		alert('User Added');
+		//document.getElementById("id").value="";
+		//document.getElementById("name").value="";
+		//document.getElementById("cell").value="";
+	} else {
+		alert('There was some issue adding the user');
+	}
+	
+}
+
+function getr() {
+    
+	var id=document.getElementById("id").value;
+	//var name=document.getElementById("name").value;
+	//var cell=document.getElementById("cell").value;
+	
+	//if(id == "2") {
+	//	alert('2');
+	//}
+	URL = "http://localhost:9000/api/netbanking/" + id ;  //Your URL
+	//alert(URL);
+	
+	//var json='{"id": "' + id + '", "name": "'+ name + '", "genre": "' + cell + '"}';
+    //alert(json);
+	var xhttpg = new XMLHttpRequest();
+    //xhttp.onreadystatechange = function() {
+    //     if (this.readyState == 4 && this.status == 200) {
+    //         alert(this.responseText);
+    //     }
+    //};
+	
+	//xhttp.open("POST", 
+	xhttpg.open("GET", URL, true);
+	xhttpg.setRequestHeader("Content-type", "application/json");
+	xhttpg.send();
+	alert ('Getting details...');
+	alert(xhttpg.responseText);
+	var resp = JSON.parse(xhttpg.responseText);
+	alert(resp);
+	if(resp == null){
+		alert('Record does not exist');
+	} else {
+		
+		document.getElementById("name").value=resp.name;
+		document.getElementById("cell").value=resp.genre;
+	}
+	
+	
+	
+	/*
+	if(resp.indexOf("done")!= -1){
+		alert('User Added');
+		document.getElementById("id").value="";
+		document.getElementById("name").value="";
+		document.getElementById("cell").value="";
+	} else {
+		alert('There was some issue adding the user');
+	}
+	*/
+	
+}
+
+
+function update() {
+    
+	var id=document.getElementById("id").value;
+	var name=document.getElementById("name").value;
+	var cell=document.getElementById("cell").value;
+	
+	
+	URL = "http://localhost:9000/api/update-netbanking/" + id ;  //Your URL
+	
+	var json='{"id": "' + id + '", "name": "'+ name + '", "genre": "' + cell + '"}';
+    //alert(json);
+	var xhttp = new XMLHttpRequest();
+    //xhttp.onreadystatechange = function() {
+    //     if (this.readyState == 4 && this.status == 200) {
+    //         alert(this.responseText);
+    //     }
+    //};
+	
+	// genre grad jgjg
+	//xhttp.open("POST", 
+	xhttp.open("PUT", URL, true);
+	xhttp.setRequestHeader("Content-type", "application/json");
+	xhttp.send(json);
+	alert ('Updating User...');
+	var resp = JSON.stringify(xhttp.responseText);
+	//alert(resp);
+	if(resp.indexOf("done")!= -1){
+		alert('Updated');
+		//document.getElementById("id").value="";
+		//document.getElementById("name").value="";
+		//document.getElementById("cell").value="";
+	} else {
+		alert('There was some issue updating the details');
+	}
+	
+}
+
+function deleter() {
+    
+	var id=document.getElementById("id").value;
+	//var name=document.getElementById("name").value;
+	//var cell=document.getElementById("cell").value;
+	
+	
+	URL = "http://localhost:9000/api/delete-netbanking/" + id ;  //Your URL
+	
+	//var json='{"id": "' + id + '", "name": "'+ name + '", "genre": "' + cell + '"}';
+    //alert(json);
+	var xhttp = new XMLHttpRequest();
+    //xhttp.onreadystatechange = function() {
+    //     if (this.readyState == 4 && this.status == 200) {
+    //         alert(this.responseText);
+    //     }
+    //};
+	
+	//xhttp.open("POST", 
+	xhttp.open("DELETE", URL, true);
+	xhttp.setRequestHeader("Content-type", "application/json");
+	xhttp.send();
+	alert ('Deleting details...');
+	//alert(xhttp.responseText);
+	if(xhttp.responseText == null){
+		alert('Error deleting data');
+	} else {
+		alert ('Record deleted');
+		document.getElementById("id").value=""
+		document.getElementById("name").value="";
+		document.getElementById("cell").value="";
+	}
+	
+	
+	
+	/*
+	if(resp.indexOf("done")!= -1){
+		alert('User Added');
+		document.getElementById("id").value="";
+		document.getElementById("name").value="";
+		document.getElementById("cell").value="";
+	} else {dd
+		alert('There was some issue adding the user');
+	}
+	*/
+	
+}
+
+
+
+
+</script>
+   
+</body>
+</html> 
